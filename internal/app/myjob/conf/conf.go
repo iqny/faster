@@ -38,3 +38,8 @@ func Config() *TomlConfig {
 	})
 	return Cfg
 }
+
+func watch()  {
+	//监控到配置
+
+}

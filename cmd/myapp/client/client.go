@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	conn, err := consul.NewClientConn("192.168.99.100:8500", "HelloService")
+	conn, err := consul.NewClientConn("192.168.99.101:8500", "HelloService")
 	if err != nil {
 		log.Fatal(err)
 	}

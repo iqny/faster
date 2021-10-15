@@ -15,7 +15,7 @@ import (
 	"syscall"
 )
 
-var q *rabbitmq.Work
+var q *rabbitmq.Queue
 
 func main() {
 	flag.Parse()

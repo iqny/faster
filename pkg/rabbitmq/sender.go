@@ -36,7 +36,9 @@ func (s *Sender) Send(name, job string, sendMsg interface{})(err error) {
 	if s.conn == nil || s.conn.IsClosed() {
 		err = s.connect()
 		s.mx.Unlock()
-		return err
+		if err!=nil{
+			return err
+		}
 	}else{
 		s.mx.Unlock()
 	}

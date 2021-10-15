@@ -14,12 +14,12 @@ import (
 const serviceName = "HelloService"
 
 func main() {
-	_, i, err := jaeger.NewTracer(serviceName, "192.168.99.100:6831")
+	_, i, err := jaeger.NewTracer(serviceName, "192.168.99.101:6831")
 	if err != nil {
 		return
 	}
 	defer i.Close()
-	r, err := consul.NewRegister("192.168.99.100:8500", serviceName, 8080)
+	r, err := consul.NewRegister("192.168.99.101:8500", serviceName, 8080)
 	if err != nil {
 		log.Fatal(err)
 	}
