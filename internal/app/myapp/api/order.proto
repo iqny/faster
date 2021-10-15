@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "./;api";
+package main;
+import public "google/protobuf/timestamp.proto";
+import public "github.com/gogo/protobuf/gogoproto/gogo.proto";
+message ListResponse{
+  repeated Order Order = 2;
+}
+
+message Order{
+  int64 Id = 1;
+  string Name = 2;
+  //google.protobuf.Timestamp birthday = 3;
+  int64 start_time = 5 [(gogoproto.jsontag) = "start_time"];
+  //int64 ctime = 9 [(gogoproto.moretags) = 'json:"ctime" gorm:"column:ctime"', (gogoproto.casttype) = "orp/pkg/time.Time"];
+  //int64 mtime = 10 [(gogoproto.moretags) = 'json:"mtime" gorm:"column:mtime"', (gogoproto.casttype) = "orp/pkg/time.Time"];
+  google.protobuf.Timestamp Start = 11 [(gogoproto.stdtime) = true];
+  google.protobuf.Timestamp CreateTime = 12 [(gogoproto.jsontag) = 'createtime'];
+}
+message PageRequest{
+  int64 Page = 1;
+}
+
+service OrderService{
+  rpc List(PageRequest) returns(ListResponse);
+}
