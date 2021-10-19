@@ -47,18 +47,6 @@ func Init(conf *Config, hook FunHook) {
 func SetAppName(name string) {
 	appName = name
 }*/
-func Debug(fields logrus.Fields, args ...interface{}) {
-	logrus.WithFields(fields).Debug(args...)
-}
-func Info(fields logrus.Fields, args ...interface{}) {
-	logrus.WithFields(fields).Info(args...)
-}
-func Warn(fields logrus.Fields, args ...interface{}) {
-	logrus.WithFields(fields).Warn(args...)
-}
-func Error(fields logrus.Fields, args ...interface{}) {
-	logrus.WithFields(fields).Error(args...)
-}
 func setLevel(level string) {
 	switch level {
 	//如果日志级别不是debug就不要打印日志到控制台了

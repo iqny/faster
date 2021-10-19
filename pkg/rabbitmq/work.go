@@ -192,7 +192,8 @@ func (q *Queue) work(queueName string) {
 		q.logger.Warningln(fmt.Sprintf("Failed to register a consumer:%v", err))
 		return
 	}
-
+	var f HandlerFunc
+	var ok bool
 	for {
 		//协和任务退出
 		if q.conn.IsClosed() {
@@ -206,7 +207,7 @@ func (q *Queue) work(queueName string) {
 			decoder := gob.NewDecoder(bytes.NewReader(msg.Body))
 			decoder.Decode(&sender)
 			//查job处理方法
-			if f, ok := q.jobs[sender.Job]; ok {
+			if f, ok = q.jobs[sender.Job]; ok {
 				v4 := strings.Split(uuid.NewV4().String(), "-")
 				traceId := fmt.Sprintf("%s%s", v4[3], v4[4])
 				q.logger.Infoln(fmt.Sprintf("%s Starting...", traceId))
