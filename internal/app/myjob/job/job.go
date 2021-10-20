@@ -2,7 +2,7 @@ package job
 
 import (
 	"fmt"
-	liblog "orp/pkg/rabbitmq/logger"
+	"github.com/sirupsen/logrus"
 	"runtime"
 	"strings"
 )
@@ -21,28 +21,28 @@ func (j *Job) debug(args ...interface{}) {
 	fields["uuid"] = j.uuid
 	fields["appName"] = j.appName
 	fields["file"] = fileInfo(2)
-	liblog.Debug(fields, args)
+	logrus.WithFields(fields).Debug(args...)
 }
 func (j *Job) info(args ...interface{}) {
 	fields := make(map[string]interface{})
 	fields["uuid"] = j.uuid
 	fields["appName"] = j.appName
 	fields["file"] = fileInfo(2)
-	liblog.Info(fields, args)
+	logrus.WithFields(fields).Info(args...)
 }
 func (j *Job) warn(args ...interface{}) {
 	fields := make(map[string]interface{})
 	fields["uuid"] = j.uuid
 	fields["appName"] = j.appName
 	fields["file"] = fileInfo(2)
-	liblog.Warn(fields, args)
+	logrus.WithFields(fields).Warn(args...)
 }
 func (j *Job) error(args ...interface{}) {
 	fields := make(map[string]interface{})
 	fields["uuid"] = j.uuid
 	fields["appName"] = j.appName
 	fields["file"] = fileInfo(2)
-	liblog.Error(fields, args)
+	logrus.WithFields(fields).Error(args...)
 }
 func fileInfo(skip int) string {
 	_, file, line, ok := runtime.Caller(skip)

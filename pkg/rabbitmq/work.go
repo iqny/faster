@@ -179,6 +179,15 @@ func (q *Queue) work(queueName string) {
 		false,
 		nil,
 	)
+	_ = ch.Qos(
+		//每次队列只消费一个消息 这个消息处理不完服务器不会发送第二个消息过来
+		//当前消费者一次能接受的最大消息数量
+		1,
+		//服务器传递的最大容量
+		0,
+		//如果为true 对channel可用 false则只对当前队列可用
+		true,
+	)
 	msgs, err := ch.Consume(
 		queue.Name,
 		"",
