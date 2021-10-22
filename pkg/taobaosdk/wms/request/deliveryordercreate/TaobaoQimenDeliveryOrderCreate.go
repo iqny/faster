@@ -19,8 +19,6 @@ type TaoBaoQiMenDeliveryOrderCreate struct {
 }
 
 func (t *TaoBaoQiMenDeliveryOrderCreate) ToXML() string {
-
-	return ""
 	output, err := xml.MarshalIndent(t, "", "")
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
