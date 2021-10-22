@@ -25,16 +25,15 @@ func main() {
 		return logger.NewLfsHook()
 	})
 	q = rabbitmq.New(ctx, conf.Cfg.Queue)
-	register()
-	q.Run()
-	signalHandler(cancelFunc)
-}
-func register()  {
+
 	j:=job.Job{}
 	q.Register("testJob",j.TestJob)
 	q.Register("orderJob",j.OrderJob)
 	q.Register("orderTransformJob",j.OrderTransformJob)
+	q.Run()
+	signalHandler(cancelFunc)
 }
+
 func signalHandler(cancelFunc context.CancelFunc) {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
