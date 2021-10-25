@@ -6,25 +6,15 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"orp/pkg/taobaosdk/wms/request"
-	"orp/pkg/taobaosdk/wms/response"
-	"orp/pkg/taobaosdk/wms/sign/hmac"
-	"orp/pkg/taobaosdk/wms/sign/hmac256"
-	"orp/pkg/taobaosdk/wms/sign/md5"
+	"orp/pkg/wms/interface_factory"
+	"orp/pkg/wms/taotao/sign/hmac"
+	"orp/pkg/wms/taotao/sign/hmac256"
+	"orp/pkg/wms/taotao/sign/md5"
 	"sort"
 	"strings"
 	"time"
 )
 
-type Config struct {
-	appKey     string
-	appSecret  string
-	Session    string
-	customerId string
-	gatewayUrl string
-	secret     string //用于hmac加密
-}
-type ConfigFunc func(c *Config)
 
 var sysParams = map[string]string{
 	"v":           "2.0",
@@ -34,14 +24,14 @@ var sysParams = map[string]string{
 	"timestamp":   time.Now().Format("2006-01-02 15:04:05"),
 }
 
-type client struct {
-	c *Config
+type Client struct {
+	c *interface_factory.Config
 }
 
-func (cli *client) Execute(req request.Request) (res response.Response, err error) {
+func (cli *Client) Execute(req interface_factory.Request) (res interface_factory.Response, err error) {
 	sysParams["method"] = req.GetMethod()
-	sysParams["app_key"] = cli.c.appKey
-	sysParams["customerId"] = cli.c.customerId
+	sysParams["app_key"] = cli.c.AppKey
+	sysParams["customerId"] = cli.c.CustomerId
 	if r, err := req.Check(); err != nil {
 		return r, err
 	}
@@ -50,20 +40,20 @@ func (cli *client) Execute(req request.Request) (res response.Response, err erro
 	return cli.post(body, cli.getUrl())
 
 }
-func (cli *client) getUrl() string {
-	return strings.Join([]string{cli.c.gatewayUrl, "?", cli.getHttpQuery()}, "")
+func (cli *Client) getUrl() string {
+	return strings.Join([]string{cli.c.GatewayUrl, "?", cli.getHttpQuery()}, "")
 }
 
 // generateSign 生成sign
-func (cli *client) generateSign(body string) string {
+func (cli *Client) generateSign(body string) string {
 	var sign string
 	switch sysParams["sign_method"] {
 	case "md5":
 		sign = md5.GenerateMd5(cli.getSysParams(body))
 	case "hmac":
-		sign = hmac.GenerateMd5(strings.Join([]string{cli.getSysParams(body)}, cli.c.secret), cli.c.secret)
+		sign = hmac.GenerateMd5(strings.Join([]string{cli.getSysParams(body)}, cli.c.Secret), cli.c.Secret)
 	case "hmac-sha256":
-		sign = hmac256.GenerateHmacSha256(strings.Join([]string{cli.getSysParams(body)}, cli.c.secret), cli.c.secret)
+		sign = hmac256.GenerateHmacSha256(strings.Join([]string{cli.getSysParams(body)}, cli.c.Secret), cli.c.Secret)
 	}
 	/*w := md5.New()
 	_, err := io.Writestring(w, cli.getSysParams(body))
@@ -75,20 +65,20 @@ func (cli *client) generateSign(body string) string {
 }
 
 // getSysParams 获取param
-func (cli *client) getSysParams(xmlBody string) string {
+func (cli *Client) getSysParams(xmlBody string) string {
 	var keys []string
 	for k := range sysParams {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
-	s := cli.c.appSecret
+	s := cli.c.AppSecret
 	for _, k := range keys {
 		s += k + sysParams[k]
 	}
-	s += xmlBody + cli.c.appSecret
+	s += xmlBody + cli.c.AppSecret
 	return s
 }
-func (cli *client) getHttpQuery() string {
+func (cli *Client) getHttpQuery() string {
 	sysParams["timestamp"] = url.QueryEscape(sysParams["timestamp"])
 	var keys []string
 	for k := range sysParams {
@@ -101,7 +91,7 @@ func (cli *client) getHttpQuery() string {
 	}
 	return strings.Trim(s, "&")
 }
-func (cli *client) post(xmlBody, url string) (res response.Response, err error) {
+func (cli *Client) post(xmlBody, url string) (res interface_factory.Response, err error) {
 	client := &http.Client{}
 	var request *http.Request
 	request, err = http.NewRequest("POST", url, strings.NewReader(xmlBody))
@@ -125,13 +115,13 @@ func (cli *client) post(xmlBody, url string) (res response.Response, err error) 
 	if err != nil {
 		return
 	}
-	var succRes response.SuccessResponse
+	var succRes interface_factory.SuccessResponse
 	err = xml.Unmarshal(body, &succRes)
 	succRes.Res = string(body)
 	succRes.Req = xmlBody
 	res = succRes
 	if err != nil {
-		var errRes response.ErrResponse
+		var errRes interface_factory.ErrResponse
 		err = xml.Unmarshal(body, &errRes)
 		errRes.Res = string(body)
 		errRes.Req = xmlBody
@@ -142,13 +132,13 @@ func (cli *client) post(xmlBody, url string) (res response.Response, err error) 
 	}
 	return
 }
-func New(cfs ...ConfigFunc) *client {
-	c := &Config{
-		gatewayUrl: "http://qimen.api.taobao.com/router/qmtest",
-		secret:     "abc",
+func New(cfs ...interface_factory.ConfigFunc) *Client {
+	c := &interface_factory.Config{
+		GatewayUrl: "http://qimen.api.taobao.com/router/qmtest",
+		Secret:     "abc",
 	}
 	for _, f := range cfs {
 		f(c)
 	}
-	return &client{c: c}
+	return &Client{c: c}
 }

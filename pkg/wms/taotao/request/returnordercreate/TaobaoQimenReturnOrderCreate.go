@@ -3,7 +3,7 @@ package returnordercreate
 import (
 	"encoding/xml"
 	"fmt"
-	"orp/pkg/taobaosdk/wms/response"
+	"orp/pkg/wms/interface_factory"
 	"strings"
 )
 
@@ -17,7 +17,7 @@ type TaoBaoQiMenReturnOrderCreate struct {
 	ExtendProps ExtendProps `xml:"extendProps"` //扩展字段
 }
 
-func (t *TaoBaoQiMenReturnOrderCreate) Check() (response.Response, error) {
+func (t *TaoBaoQiMenReturnOrderCreate) Check() (interface_factory.Response, error) {
 	return nil, nil
 }
 

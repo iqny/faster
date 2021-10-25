@@ -4,7 +4,7 @@ package stockoutcreate
 import (
 	"encoding/xml"
 	"fmt"
-	"orp/pkg/taobaosdk/wms/response"
+	"orp/pkg/wms/interface_factory"
 	"strings"
 )
 
@@ -17,7 +17,7 @@ type TaoBaoQiMenStockOutCreate struct {
 	OrderLines    OrderLines    `xml:"orderLines"`
 }
 
-func (t *TaoBaoQiMenStockOutCreate) Check() (response.Response, error) {
+func (t *TaoBaoQiMenStockOutCreate) Check() (interface_factory.Response, error) {
 	return nil, nil
 }
 

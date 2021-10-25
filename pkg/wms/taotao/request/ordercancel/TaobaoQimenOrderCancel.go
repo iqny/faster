@@ -4,7 +4,7 @@ package ordercancel
 import (
 	"encoding/xml"
 	"fmt"
-	"orp/pkg/taobaosdk/wms/response"
+	"orp/pkg/wms/interface_factory"
 	"strings"
 )
 
@@ -20,7 +20,7 @@ type TaoBaoQiMenOrderCancel struct {
 	CancelReason  string   `xml:"cancelReason"`  //	已经退货	取消原因
 }
 
-func (t *TaoBaoQiMenOrderCancel) Check() (response.Response, error) {
+func (t *TaoBaoQiMenOrderCancel) Check() (interface_factory.Response, error) {
 	return nil, nil
 }
 

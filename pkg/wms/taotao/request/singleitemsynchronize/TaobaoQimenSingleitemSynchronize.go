@@ -4,7 +4,7 @@ package singleitemsynchronize
 import (
 	"encoding/xml"
 	"fmt"
-	"orp/pkg/taobaosdk/wms/response"
+	"orp/pkg/wms/interface_factory"
 	"strings"
 )
 
@@ -22,7 +22,7 @@ type TaoBaoQimEnSingleItemSynchronize struct {
 	ExtendProps   ExtendProps `xml:"extendProps"`   //扩展字段
 }
 
-func (t *TaoBaoQimEnSingleItemSynchronize) Check() (response.Response, error) {
+func (t *TaoBaoQimEnSingleItemSynchronize) Check() (interface_factory.Response, error) {
 	return nil, nil
 }
 

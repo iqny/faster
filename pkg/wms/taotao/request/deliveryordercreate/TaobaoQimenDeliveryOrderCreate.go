@@ -5,7 +5,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"orp/pkg/taobaosdk/wms/response"
+	"orp/pkg/wms/interface_factory"
 	"strings"
 )
 
@@ -28,7 +28,7 @@ func (t *TaoBaoQiMenDeliveryOrderCreate) ToXML() string {
 func (t *TaoBaoQiMenDeliveryOrderCreate) GetMethod() string {
 	return method
 }
-func (t *TaoBaoQiMenDeliveryOrderCreate) Check() (response.Response, error) {
+func (t *TaoBaoQiMenDeliveryOrderCreate) Check() (interface_factory.Response, error) {
 	/*if res, err := t.DeliveryOrder.SenderInfo.check(); err != nil {
 		return res, err
 	}*/
@@ -192,9 +192,9 @@ type Insurance struct {
 type ExtendProps struct {
 }
 
-func (s *SenderInfo) check() (response.Response, error) {
+func (s *SenderInfo) check() (interface_factory.Response, error) {
 	var err = errors.New("check fail")
-	var res response.ErrResponse
+	var res interface_factory.ErrResponse
 	if s.Name == "" {
 		res.Code = "340"
 		return res, err

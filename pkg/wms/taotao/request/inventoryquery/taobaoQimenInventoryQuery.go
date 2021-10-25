@@ -3,7 +3,7 @@ package inventoryquery
 import (
 	"encoding/xml"
 	"fmt"
-	"orp/pkg/taobaosdk/wms/response"
+	"orp/pkg/wms/interface_factory"
 	"strings"
 )
 
@@ -17,7 +17,7 @@ type TaoBaoQiMenInventoryQuery struct {
 	ExtendProps  ExtendProps  `xml:"extendProps"` //扩展字段
 }
 
-func (t *TaoBaoQiMenInventoryQuery) Check() (response.Response, error) {
+func (t *TaoBaoQiMenInventoryQuery) Check() (interface_factory.Response, error) {
 	return nil, nil
 }
 

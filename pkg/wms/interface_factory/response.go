@@ -1,4 +1,4 @@
-package response
+package interface_factory
 
 import "encoding/xml"
 

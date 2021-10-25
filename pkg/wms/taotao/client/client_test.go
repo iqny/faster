@@ -3,24 +3,24 @@ package client
 import (
 	"encoding/xml"
 	"fmt"
-	"orp/pkg/taobaosdk/wms/request/deliveryordercreate"
-	"orp/pkg/taobaosdk/wms/request/entryordercreate"
-	"orp/pkg/taobaosdk/wms/request/ordercancel"
-	"orp/pkg/taobaosdk/wms/response"
+	"orp/pkg/wms/interface_factory"
+	"orp/pkg/wms/taotao/request/deliveryordercreate"
+	"orp/pkg/wms/taotao/request/entryordercreate"
+	"orp/pkg/wms/taotao/request/ordercancel"
 	"testing"
 )
 
-func withAppKey(c *Config) {
-	c.appKey = ""
+func withAppKey(c *interface_factory.Config) {
+	c.AppKey = ""
 }
-func withAppSecret(c *Config) {
-	c.appSecret = ""
+func withAppSecret(c *interface_factory.Config) {
+	c.AppSecret = ""
 }
-func withCustomerId(c *Config) {
-	c.customerId = ""
+func withCustomerId(c *interface_factory.Config) {
+	c.CustomerId = ""
 }
-func withGatewayUrl(c *Config) {
-	c.gatewayUrl = "https://qimen.api.taobao.com/router/qmtest"
+func withGatewayUrl(c *interface_factory.Config) {
+	c.GatewayUrl = "https://qimen.api.taobao.com/router/qmtest"
 }
 func TestNew(t *testing.T) {
 	cli := New(withAppKey, withAppSecret, withCustomerId, withGatewayUrl)
@@ -47,15 +47,15 @@ func TestNew(t *testing.T) {
 	res, err := cli.Execute(request)
 	if err == nil {
 		switch res.(type) {
-		case response.ErrResponse:
-			res := res.(response.ErrResponse)
+		case interface_factory.ErrResponse:
+			res := res.(interface_factory.ErrResponse)
 			fmt.Println(res.Message, err)
-		case response.SuccessResponse:
-			res := res.(response.SuccessResponse)
+		case interface_factory.SuccessResponse:
+			res := res.(interface_factory.SuccessResponse)
 			fmt.Println(res.Req, err)
 		}
 	} else {
-		r := res.(response.ErrResponse)
+		r := res.(interface_factory.ErrResponse)
 		fmt.Println(r.Message, err)
 	}
 }
@@ -77,11 +77,11 @@ func TestEntryOrder(t *testing.T) {
 	res, err := cli.Execute(request)
 	if err == nil {
 		switch res.(type) {
-		case response.ErrResponse:
-			res := res.(response.ErrResponse)
+		case interface_factory.ErrResponse:
+			res := res.(interface_factory.ErrResponse)
 			fmt.Println(res.Message, err)
-		case response.SuccessResponse:
-			res := res.(response.SuccessResponse)
+		case interface_factory.SuccessResponse:
+			res := res.(interface_factory.SuccessResponse)
 			fmt.Println(res.Req, err)
 		}
 	}
@@ -100,11 +100,11 @@ func TestOrderCancel(t *testing.T) {
 	res, err := cli.Execute(request)
 	if err == nil {
 		switch res.(type) {
-		case response.ErrResponse:
-			res := res.(response.ErrResponse)
+		case interface_factory.ErrResponse:
+			res := res.(interface_factory.ErrResponse)
 			fmt.Println(res.Message, err)
-		case response.SuccessResponse:
-			res := res.(response.SuccessResponse)
+		case interface_factory.SuccessResponse:
+			res := res.(interface_factory.SuccessResponse)
 			fmt.Println(res.Req, err)
 		}
 	}
@@ -118,11 +118,11 @@ func BenchmarkName(b *testing.B) {
 		res, err := cli.Execute(request)
 		if err == nil {
 			switch res.(type) {
-			case response.ErrResponse:
-				//res := res.(response.ErrResponse)
+			case interface_factory.ErrResponse:
+				//res := res.(interface_factory.ErrResponse)
 				//fmt.Println(res.Message, err)
-			case response.SuccessResponse:
-				//res := res.(response.SuccessResponse)
+			case interface_factory.SuccessResponse:
+				//res := res.(interface_factory.SuccessResponse)
 				//fmt.Println(res.Req, err)
 			}
 		}
