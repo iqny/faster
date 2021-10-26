@@ -75,8 +75,8 @@ func signalHandler(cancelFunc context.CancelFunc) {
 	}
 }
 func TestPush(t *testing.T) {
-	client := NweSender("amqp://admin:admin@192.168.99.101:5672/", "test.direct")
-	for i := 0; i < 5000; i++ {
+	client := NweSender("amqp://guest:guest@127.0.0.1:5672/", "test.direct")
+	for i := 0; i < 500000; i++ {
 		client.Send("testQueue", "testJob", "testJob...")
 		client.Send("orderQueue", "orderJob", "orderJob...")
 		client.Send("orderTransformQueue", "orderTransformJob", "orderTransformJob...")

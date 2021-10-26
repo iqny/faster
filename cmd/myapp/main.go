@@ -1,39 +1,37 @@
 package main
 
 import (
-	"github.com/afex/hystrix-go/hystrix"
-	"golang.org/x/time/rate"
+	"flag"
 	"log"
-	"orp/internal/app/myapp/api"
-	service2 "orp/internal/app/myapp/service"
-	"orp/pkg/consul"
-	"orp/pkg/jaeger"
+	"orp/internal/app/myapp/conf"
+	"orp/internal/app/myapp/http"
+	grpc "orp/internal/app/myapp/server/grpc"
+	"orp/internal/app/myapp/service"
 	"time"
 )
 
-const serviceName = "HelloService"
+var s *service.Service
 
 func main() {
-	_, i, err := jaeger.NewTracer(serviceName, "192.168.99.101:6831")
-	if err != nil {
-		return
+	flag.Parse()
+	conf.Config()
+	conf.Config()
+	s = service.New()
+	//log.Init(conf.Cfg.Log)
+	/*loger.Init(conf.Cfg.Loger, func() logrus.Hook {
+		return loger.NewLfsHook()
+	})*/
+	defer s.Close()
+	grpc.New(s)
+	r := http.Init("c", s)
+	time.Local, _ = time.LoadLocation(conf.Cfg.App.Timezone)
+	/*server := endless.NewServer(conf.Cfg.App.Host, r)
+	server.BeforeBegin = func(add string) {
+		log.Printf("Actual pid is %d", syscall.Getpid())
 	}
-	defer i.Close()
-	r, err := consul.NewRegister("192.168.99.101:8500", serviceName, 8080)
+	err := server.ListenAndServe()*/
+	err:=r.Run(conf.Cfg.App.Host)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Server err: %v", err)
 	}
-	//创建限流器 初始容量为10，每秒产生一个令牌
-	limit := rate.NewLimiter(rate.Every(time.Second), 15)
-
-	//创建熔断器
-	hystrix.ConfigureCommand("HelloService", hystrix.CommandConfig{
-		Timeout:                2000, //超时时间设置  单位毫秒
-		MaxConcurrentRequests:  8,    //最大请求数
-		SleepWindow:            1,    //过多长时间，熔断器再次检测是否开启。单位毫秒
-		ErrorPercentThreshold:  30,   //错误率
-		RequestVolumeThreshold: 5,    //请求阈值  熔断器是否打开首先要满足这个条件；这里的设置表示至少有5个请求才进行ErrorPercentThreshold错误百分比计算
-	})
-	api.RegisterOrderServiceServer(r.Server, &service2.Order{Limit: limit})
-	r.Run()
 }

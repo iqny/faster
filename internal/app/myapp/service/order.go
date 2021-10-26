@@ -55,3 +55,6 @@ func (o *Order) List(ctx context.Context, in *api.PageRequest) (out *api.ListRes
 	}
 	return
 }
+func (o Order) Add() {
+
+}
