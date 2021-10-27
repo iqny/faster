@@ -2,3 +2,143 @@
 timezone = "Asia/Shanghai"
 host = ":8090" #
 gzip = true
+[db]
+drive = "mysql"
+dsn = "root:root@tcp(192.168.99.101:13308)/sharding_db?charset=utf8mb4&interpolateParams=true"
+logLevel = "debug"
+showSql = true
+logFile = 'D:/juest/src/orp/logs/sql.log'
+active = 5
+idle = 1
+timezone = "Asia/Shanghai"
+idleTimeout = "4h"
+[autoid]
+    [autoid.master]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_master?charset=latin1&interpolateParams=true"
+    autoIdType="res"
+    AutoIdTable="res"
+    active = 1
+    idle = 1
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_0"
+    active = 2
+    idle = 2
+    capacity=["default:1000","1005:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_1"
+    active = 1
+    idle = 1
+    capacity=["default:1000","1010:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_2"
+    active = 1
+    idle = 1
+    capacity=["default:1000","1010:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_3"
+    active = 1
+    idle = 1
+    capacity=["default:1000","1010:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_4"
+    active = 1
+    idle = 1
+    capacity=["default:1000","1010:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_5"
+    active = 1
+    idle = 1
+    capacity=["default:1000","1010:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_6"
+    active = 1
+    idle = 1
+    capacity=["default:1000","1010:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_7"
+    active = 1
+    idle = 1
+    capacity=["default:1000","1010:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_8"
+    active = 1
+    idle = 1
+    capacity=["default:1000","1010:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'
+    [[autoid.slave]]
+    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    autoIdType="slave"
+    AutoIdTable="res_slave_current_9"
+    active = 1
+    idle = 1
+    capacity=["default:1000","1010:999"]
+    weight=50
+    maxRetry=2
+    logLevel = "debug"
+    showSql = true
+    logFile = 'D:/juest/src/orp/logs/sql.log'

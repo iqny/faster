@@ -30,5 +30,6 @@ func innerRouter() (router *gin.Engine) {
 		var du float64 = 1.00
 		ctx.JSON(http.StatusOK, gin.H{"aa": du})
 	})
+	router.GET("/order",Order)
 	return
 }
