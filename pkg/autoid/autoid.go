@@ -97,31 +97,27 @@ func (a *AutoId) GetAutoId(key int16) (id int64, err error) {
 	}
 	length := int16(len(a.c.Slave) - 1)
 	var count int16 = 1
-	var k int16
-	for k = 0; k <= length; k++ {
-		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		randWeight := r.Intn(int(totalWeight))
-		var i int16 = 0
-		//fmt.Println(int16(randWeight), "==", auto.c.Slave[i].Weight)
-		j := int16(randWeight)
-		l := length
-		for j > 0 && i < l {
-			j = j - a.c.Slave[i].Weight
-			i++
-		}
-		return int64(i),nil
-		server := a.c.Slave[i]
-		//fmt.Println("AutoIdTable", server.AutoIdTable, " i=", i)
-		if server.AutoIdType == "master" {
+	//var k int16
+	//计算权重
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	randWeight := r.Intn(int(totalWeight))
+	var i int16 = 0
+	j := int16(randWeight)
+	for j >= 0 && i <= length {
+		j = j - a.c.Slave[i].Weight
+		i++
+	}
+	server := a.c.Slave[i]
+	//fmt.Println("AutoIdTable", server.AutoIdTable, " i=", i)
+	if server.AutoIdType == "master" {
 
-		} else if server.AutoIdType == "slave" {
-			id, err = a.getSlaveId(server, key, count)
-			if id > 0 {
-				return
-			}
-		} else if server.AutoIdType == "http" {
-
+	} else if server.AutoIdType == "slave" {
+		id, err = a.getSlaveId(server, key, count)
+		if id > 0 {
+			return
 		}
+	} else if server.AutoIdType == "http" {
+
 	}
 	return
 }

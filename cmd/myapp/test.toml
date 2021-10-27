@@ -16,7 +16,7 @@ idleTimeout = "4h"
     [autoid.master]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_master?charset=latin1&interpolateParams=true"
     autoIdType="res"
-    AutoIdTable="res"
+    autoIdTable="res"
     active = 1
     idle = 1
     logLevel = "debug"
@@ -25,7 +25,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_0"
+    autoIdTable="res_slave_current_0"
     active = 2
     idle = 2
     capacity=["default:1000","1005:999"]
@@ -37,7 +37,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_1"
+    autoIdTable="res_slave_current_1"
     active = 1
     idle = 1
     capacity=["default:1000","1010:999"]
@@ -49,7 +49,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_2"
+    autoIdTable="res_slave_current_2"
     active = 1
     idle = 1
     capacity=["default:1000","1010:999"]
@@ -61,7 +61,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_3"
+    autoIdTable="res_slave_current_3"
     active = 1
     idle = 1
     capacity=["default:1000","1010:999"]
@@ -73,7 +73,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_4"
+    autoIdTable="res_slave_current_4"
     active = 1
     idle = 1
     capacity=["default:1000","1010:999"]
@@ -85,7 +85,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_5"
+    autoIdTable="res_slave_current_5"
     active = 1
     idle = 1
     capacity=["default:1000","1010:999"]
@@ -97,7 +97,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_6"
+    autoIdTable="res_slave_current_6"
     active = 1
     idle = 1
     capacity=["default:1000","1010:999"]
@@ -109,7 +109,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_7"
+    autoIdTable="res_slave_current_7"
     active = 1
     idle = 1
     capacity=["default:1000","1010:999"]
@@ -121,7 +121,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_8"
+    autoIdTable="res_slave_current_8"
     active = 1
     idle = 1
     capacity=["default:1000","1010:999"]
@@ -133,7 +133,7 @@ idleTimeout = "4h"
     [[autoid.slave]]
     dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
-    AutoIdTable="res_slave_current_9"
+    autoIdTable="res_slave_current_9"
     active = 1
     idle = 1
     capacity=["default:1000","1010:999"]
