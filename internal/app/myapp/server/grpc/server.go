@@ -1,3 +1,5 @@
+//go:generate protoc -I. -I"%GOPATH%/src" -I"%GOPATH%/pkg/mod/github.com/gogo/protobuf@v1.3.2" --gofast_out=. "../../api/order.proto"
+
 package server
 
 import (
@@ -15,6 +17,7 @@ import (
 )
 
 const serviceName = "HelloService"
+
 func New(svr *service.Service) {
 	_, _, err := jaeger.NewTracer(serviceName, "192.168.99.101:6831")
 	if err != nil {
@@ -43,6 +46,28 @@ func New(svr *service.Service) {
 type server struct {
 	svr   *service.Service
 	Limit *rate.Limiter
+}
+
+func (s *server) Add(ctx context.Context, order *api.Order) (*api.Response, error) {
+	addOrderSpan,_ := opentracing.StartSpanFromContext(ctx, "AddOrder")
+	defer addOrderSpan.Finish()
+	/*if allow := s.Limit.Allow(); !allow {
+		addOrderSpan.SetTag("order.Limit.Allow()", false)
+		//log.Println("limit cancel")
+		return nil, errors.New("limit cancel")
+	}*/
+	addOrderSpan.SetTag("add.order start", true)
+	_, err := s.svr.Add(order.Name)
+	if err != nil {
+		return &api.Response{
+			Code: 304,
+			Msg:  "create order fail",
+		}, nil
+	}
+	return &api.Response{
+		Code: 201,
+		Msg:  "create order success",
+	}, nil
 }
 
 var _ api.OrderServiceServer = &server{}

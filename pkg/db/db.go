@@ -40,7 +40,10 @@ func New(c *Config) (db *xorm.Engine) {
 
 	db.SetMaxIdleConns(c.Idle)   //设置连接池的空闲数大小
 	db.SetMaxOpenConns(c.Active) //设置最大打开连接数
-	db.SetConnMaxLifetime(time.Duration(c.IdleTimeout) / time.Second)
+	//fmt.Println(time.Duration(c.IdleTimeout))
+	if c.IdleTimeout >0 {
+		//db.SetConnMaxLifetime(time.Duration(c.IdleTimeout) / time.Second)
+	}
 	//打印到文件
 	if c.LogFile != "" {
 		logWriter, err := os.Create(c.LogFile)

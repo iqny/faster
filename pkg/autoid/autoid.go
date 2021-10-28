@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"orp/pkg/db"
+	xtime "orp/pkg/time"
 	"strconv"
 	"strings"
 	"sync"
@@ -23,9 +24,7 @@ type Master struct {
 	Idle        int
 	AutoIdType  string
 	AutoIdTable string
-	ShowSql     bool
-	LogLevel    string
-	LogFile     string
+	IdleTimeout xtime.Duration
 }
 type Slave struct {
 	Dsn         string
@@ -36,9 +35,7 @@ type Slave struct {
 	Weight      int16
 	MaxRetry    int16
 	AutoIdTable string
-	ShowSql     bool
-	LogLevel    string
-	LogFile     string
+	IdleTimeout xtime.Duration
 }
 
 type AutoId struct {
@@ -53,8 +50,6 @@ func init() {
 	ormConfig = &db.Config{
 		DSN:         "",
 		Drive:       "mysql",
-		ShowSql:     false,
-		LogLevel:    "",
 		Active:      0,
 		Idle:        0,
 		IdleTimeout: 0,
@@ -75,17 +70,13 @@ func New(c *Config) *AutoId {
 		ormConfig.Active = cnf.Active
 		ormConfig.Idle = cnf.Idle
 		ormConfig.DSN = cnf.Dsn
-		//ormConfig.ShowSql = cnf.ShowSql
-		//ormConfig.LogLevel = cnf.LogLevel
-		//ormConfig.LogFile = cnf.LogFile
+		ormConfig.IdleTimeout = cnf.IdleTimeout
 		autoId.pool[cnf.AutoIdTable] = db.New(ormConfig)
 	}
 	ormConfig.Active = c.Master.Active
 	ormConfig.Idle = c.Master.Idle
 	ormConfig.DSN = c.Master.Dsn
-	//ormConfig.ShowSql = c.Master.ShowSql
-	//ormConfig.LogLevel = c.Master.LogLevel
-	//ormConfig.LogFile = c.Master.LogFile
+	ormConfig.IdleTimeout = c.Master.IdleTimeout
 	masterDb = db.New(ormConfig)
 	autoId.pool[c.Master.AutoIdTable] = masterDb
 	return &autoId
@@ -101,11 +92,11 @@ func (a *AutoId) GetAutoId(key int16) (id int64, err error) {
 	//计算权重
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	randWeight := r.Intn(int(totalWeight))
-	var i int16 = 0
+	var i int16 = -1
 	j := int16(randWeight)
-	for j >= 0 && i <= length {
-		j = j - a.c.Slave[i].Weight
+	for j >= 0 && i < length {
 		i++
+		j = j - a.c.Slave[i].Weight
 	}
 	server := a.c.Slave[i]
 	//fmt.Println("AutoIdTable", server.AutoIdTable, " i=", i)
@@ -123,29 +114,31 @@ func (a *AutoId) GetAutoId(key int16) (id int64, err error) {
 }
 
 //master
-func (a *AutoId) getMasterId(server *Master, key int16, count int64) int64 {
-
+func (a *AutoId) getMasterId(server *Master, key int16, count int64) (id int64, err error) {
 	sql := fmt.Sprintf("update %s set id=last_insert_id(id+?) where k=?", server.AutoIdTable)
 	res, err := masterDb.Exec(sql, count, key)
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
+		return 0, err
 	}
-	var id int64
+	//var id int64
 	id, _ = res.LastInsertId()
 	if id == 0 {
 		sql := fmt.Sprintf("insert ignore into %s(k,id) values (?,0)", server.AutoIdTable)
 		_, err := masterDb.Exec(sql, key)
 		if err != nil {
-			log.Fatal(err)
+			//log.Fatal(err)
+			return 0, err
 		}
 		sql = fmt.Sprintf("update %s set id=last_insert_id(id+?) where k=?", server.AutoIdTable)
 		res, err = masterDb.Exec(sql, count, key)
 		if err != nil {
-			log.Fatal(err)
+			//log.Fatal(err)
+			return 0, err
 		}
 		id, _ = res.LastInsertId()
 	}
-	return id
+	return
 }
 
 func (a *AutoId) getSlaveId(server *Slave, key int16, count int16) (int64, error) {
@@ -204,17 +197,17 @@ func (a *AutoId) getSlaveId(server *Slave, key int16, count int16) (int64, error
 func (a *AutoId) rechargeAutoIdSlave(server *Slave, master *Master, key int16, capacity int64, minNum int64) (bool, error) {
 	num, b := a.getAutoIdNum(server, key)
 	if !b {
-		return false, errors.New("slav找不到数据")
+		return false, errors.New("slave找不到数据")
 	}
 	//fmt.Println("num==", num)
 	if num < minNum || num == 0 {
-		id := a.getMasterId(master, key, capacity)
+		id,err := a.getMasterId(master, key, capacity)
 		if id == 0 {
 			return false, errors.New("master找不到数据")
 		}
 		sql := fmt.Sprintf("replace into %s(k,id,num) values('%d',%d-%d,%d)", server.AutoIdTable, key, id, capacity, capacity)
-		db := a.pool[server.AutoIdTable]
-		_, err := db.Exec(sql)
+		engine := a.pool[server.AutoIdTable]
+		_, err = engine.Exec(sql)
 		if err != nil {
 			return false, err
 		}
@@ -222,9 +215,9 @@ func (a *AutoId) rechargeAutoIdSlave(server *Slave, master *Master, key int16, c
 	return true, nil
 }
 func (a *AutoId) getAutoIdNum(server *Slave, key int16) (int64, bool) {
-	db := a.pool[server.AutoIdTable]
+	engine := a.pool[server.AutoIdTable]
 	sql := fmt.Sprintf("select num from `%s` where k='%d' limit 1", server.AutoIdTable, key)
-	res, err := db.Query(sql)
+	res, err := engine.Query(sql)
 	if err != nil {
 		//log.Fatal(err)
 		return 0, false
@@ -250,7 +243,7 @@ func (a *AutoId) slaveId(server *Slave, key int16, count int16) int64 {
 	return id
 }
 func (a *AutoId) Close() {
-	for _, db := range a.pool {
-		db.Close()
+	for _, engine := range a.pool {
+		engine.Close()
 	}
 }

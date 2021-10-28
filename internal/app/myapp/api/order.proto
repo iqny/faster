@@ -21,7 +21,12 @@ message Order{
 message PageRequest{
   int64 Page = 1;
 }
-
+message Response{
+  int64 Code = 1;
+  string Msg = 2;
+}
 service OrderService{
   rpc List(PageRequest) returns(ListResponse);
+  rpc Add(Order)returns(Response);
+
 }

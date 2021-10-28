@@ -5,10 +5,16 @@ import (
 	"log"
 	"orp/internal/app/myapp/api"
 	"orp/pkg/consul"
+	"strconv"
+	"strings"
 	"time"
 )
 
 func main() {
+	//list()
+	add()
+}
+func list() {
 	conn, err := consul.NewClientConn("192.168.99.101:8500", "HelloService")
 	if err != nil {
 		log.Fatal(err)
@@ -40,5 +46,30 @@ func main() {
 			}
 		}
 		time.Sleep(time.Second)
+	}
+}
+
+func add() {
+	conn, err := consul.NewClientConn("192.168.99.101:8500", "HelloService")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+	c := api.NewOrderServiceClient(conn)
+	for i := 0; i<100000; i++{
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+
+		//调用远端的方法
+		_, err := c.Add(ctx, &api.Order{
+			Id:   0,
+			Name: strings.Join([]string{"vip"}, strconv.Itoa(i)),
+		})
+		if err != nil {
+			log.Printf("could not greet: %v", err)
+
+		} else {
+			//fmt.Println(r.Code)
+		}
 	}
 }
