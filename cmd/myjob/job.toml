@@ -1,19 +1,19 @@
 [queue]
-addr="amqp://admin:admin@192.168.99.101:5672/"
+addr="amqp://guest:guest@localhost:5672/"
 logFilePath="D:/juest/src/orp/logs/queue/monitor.log"
 exchange="test.direct"
 [[queue.work]]
 name="orderQueue"#队列名称
 enable=true
-maxIdle=10
+maxIdle=1
 [[queue.work]]
 name="testQueue"#队列名称
 enable=true
-maxIdle=11
+maxIdle=2
 [[queue.work]]
 name="orderTransformQueue"#队列名称
 enable=true
-maxIdle=2
+maxIdle=1
 [logger]
 FileName = "D:/juest/src/orp/logs"
 FileNameFormat = ".%Y%m%d"
