@@ -42,7 +42,7 @@ func NewConsulRegister(addr , service string,port int) *ConsulRegister {
 		ServiceID:fmt.Sprintf("%v-%v-%v", service, localIP(), port),
 		Tag:     []string{},
 		Port:    port,
-		DeregisterCriticalServiceAfter: time.Duration(10) * time.Second,
+		DeregisterCriticalServiceAfter: time.Duration(100) * time.Second,
 		Interval:                       time.Duration(3) * time.Second,
 	}
 }

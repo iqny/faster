@@ -52,21 +52,22 @@ func list() {
 
 func add() {
 	var wg sync.WaitGroup
+	conn, err := consul.NewClientConn("127.0.0.1:8500", "HelloService")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+	c := api.NewOrderServiceClient(conn)
+
+
+	//调用远端的方法
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			conn, err := consul.NewClientConn("192.168.99.101:8500", "HelloService")
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer conn.Close()
-			c := api.NewOrderServiceClient(conn)
-			for i := 0; i < 100000; i++ {
-				ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+			for i := 0; i < 5000; i++ {
+				ctx, cancel := context.WithTimeout(context.Background(), time.Duration(200)*time.Second)
 				defer cancel()
-
-				//调用远端的方法
 				_, err = c.Add(ctx, &api.Order{
 					Id:   0,
 					Name: strings.Join([]string{"vip"}, strconv.Itoa(i)),
