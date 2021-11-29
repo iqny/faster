@@ -10,14 +10,17 @@ import (
 )
 
 type TomlConfig struct {
-	App *AppConfig
-	Db  *db.Config
-	Autoid   *autoid.Config
+	App    *AppConfig
+	Db     *db.Config
+	Autoid *autoid.Config
 }
 type AppConfig struct {
-	Timezone string
-	Host     string
-	Gzip     bool
+	Timezone      string
+	Host          string
+	Gzip          bool
+	AutoIdService string
+	CenterId      string
+	OrderCode     int64
 }
 
 //conf
@@ -25,7 +28,7 @@ type AppConfig struct {
 var (
 	confPath string
 	//Cfg      *TomlConfig
-	once     sync.Once
+	once sync.Once
 )
 
 func init() {

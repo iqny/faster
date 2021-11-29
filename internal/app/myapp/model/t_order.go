@@ -1,11 +1,11 @@
 package model
 
-/*type TOrder struct {
+type TOrder struct {
 	OrderId int64  `json:"order_id"`
 	Name    string `json:"name"`
-}*/
+}
 
-type TOrder struct {
+/*type TOrder struct {
 	OrderSn   int64  `json:"order_sn"`
 	UserId    int64  `json:"user_id"`
 	Tid       string `json:"tid"`
@@ -29,4 +29,4 @@ type TOrderItem struct {
 	Discount         float64 `json:"discount"`
 	TransactionPrice float64 `json:"transaction_price"`
 	Oid              string  `json:"oid"`
-}
+}*/

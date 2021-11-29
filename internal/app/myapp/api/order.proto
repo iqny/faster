@@ -30,3 +30,14 @@ service OrderService{
   rpc Add(Order)returns(Response);
 
 }
+
+message ResponseId{
+  int64 Id = 1;
+  string Msg = 3;
+}
+message Request{
+  int64 Code = 1;
+}
+service AutoId{
+  rpc Get(Request) returns(ResponseId);
+}

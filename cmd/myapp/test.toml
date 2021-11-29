@@ -2,10 +2,13 @@
 timezone = "Asia/Shanghai"
 host = ":8090" #
 gzip = true
+autoIdService = "autoIdService"
+centerId = "127.0.0.1:8500"
+orderCode = 1005
 [db]
 drive = "mysql"
-dsn = "root:root@tcp(127.0.0.1:3309)/sharding_db?charset=utf8mb4&interpolateParams=true"
-logLevel = "err"
+dsn = "root:root@tcp(127.0.0.1:3308)/sharding_db?charset=utf8mb4&interpolateParams=true"
+logLevel = "debug"
 showSql = true
 logFile = 'D:/juest/src/orp/logs/sql0.log'
 active = 100

@@ -65,7 +65,7 @@ func add() {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			for i := 0; i < 5000; i++ {
+			for i := 0; i < 50000; i++ {
 				ctx, cancel := context.WithTimeout(context.Background(), time.Duration(200)*time.Second)
 				defer cancel()
 				_, err = c.Add(ctx, &api.Order{

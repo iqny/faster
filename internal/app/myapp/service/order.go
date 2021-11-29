@@ -2,9 +2,7 @@ package service
 
 import (
 	"errors"
-	"math/rand"
 	"orp/internal/app/myapp/model"
-	"strconv"
 )
 
 func (s *Service) Orders() []model.TOrder {
@@ -13,6 +11,18 @@ func (s *Service) Orders() []model.TOrder {
 	return orders
 }
 func (s *Service) Add(name string) (int64, error) {
+	orderSn, err :=s.GetID(s.c.App.OrderCode)
+	if err != nil {
+		return 0, errors.New("添加订单失败")
+	}
+
+	order := model.TOrder{
+		OrderId: orderSn,
+		Name:    name,
+	}
+	return s.dao.Db.Insert(order)
+}
+/*func (s *Service) Add(name string) (int64, error) {
 	orderSn, err := s.autoid.GetAutoId(1005)
 	if err != nil {
 		return 0, errors.New("添加订单失败")
@@ -107,7 +117,7 @@ func (s *Service) Add(name string) (int64, error) {
 		Town:      "天河区",
 		Address:   "体育中心1688号",
 		Tel:       "137612312313231",
-	}*/
+	}
 	goods1 := []model.TOrderItem{
 		{
 			Id: id2,
@@ -214,4 +224,4 @@ func (s *Service) Add(name string) (int64, error) {
 	}
 	s.dao.Db.Insert(orders[oi1])
 	return s.dao.Db.Insert(goods)
-}
+}*/

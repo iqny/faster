@@ -1,0 +1,17 @@
+[app]
+timezone = "Asia/Shanghai"
+host = ":8192" #
+gzip = true
+autoIdService = "shopService"
+centerId = "127.0.0.1:8500"
+shopCode = 1010
+[db]
+drive = "mysql"
+dsn = "root:root@tcp(127.0.0.1:3308)/sharding_db?charset=utf8mb4&interpolateParams=true"
+logLevel = "debug"
+showSql = true
+logFile = 'D:/juest/src/orp/logs/sql0.log'
+active = 100
+idle = 10
+timezone = "Asia/Shanghai"
+idleTimeout = "1m"
