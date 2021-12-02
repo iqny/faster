@@ -3,6 +3,7 @@ package conf
 import (
 	"flag"
 	"github.com/BurntSushi/toml"
+	"orp/pkg/autoid"
 	"orp/pkg/db"
 	"path/filepath"
 	"sync"
@@ -11,14 +12,17 @@ import (
 type TomlConfig struct {
 	App *AppConfig
 	Db  *db.Config
+	Autoid *autoid.Config
 }
 type AppConfig struct {
 	Timezone      string
 	Host          string
 	Gzip          bool
-	ShopCode      int64
 	AutoIdService string
-	CenterId      string
+	ShopCode     int64
+	ServiceName string
+	Port int
+	CenterId string
 }
 
 //conf

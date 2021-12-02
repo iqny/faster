@@ -1,17 +1,17 @@
 [app]
 serviceName = "AutoIdService"
-port = 8191
-centerId = "127.0.0.1:8500"
+port = 8192
+centerId = "localhost:8500"
 [autoid]
     [autoid.master]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_master?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_master?charset=latin1&interpolateParams=true"
     autoIdType="res"
     autoIdTable="res"
     active = 1
     idle = 1
     idleTimeout = "1m"
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_0"
     active = 1
@@ -21,7 +21,7 @@ centerId = "127.0.0.1:8500"
     weight=100
     maxRetry=2
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_1"
     active = 1
@@ -31,7 +31,7 @@ centerId = "127.0.0.1:8500"
     weight=50
     maxRetry=2
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_2"
     active = 1
@@ -41,7 +41,7 @@ centerId = "127.0.0.1:8500"
     weight=50
     maxRetry=2
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_3"
     active = 1
@@ -51,7 +51,7 @@ centerId = "127.0.0.1:8500"
     weight=50
     maxRetry=2
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_4"
     active = 1
@@ -61,7 +61,7 @@ centerId = "127.0.0.1:8500"
     weight=50
     maxRetry=2
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_5"
     active = 1
@@ -71,7 +71,7 @@ centerId = "127.0.0.1:8500"
     weight=50
     maxRetry=2
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_6"
     active = 1
@@ -81,7 +81,7 @@ centerId = "127.0.0.1:8500"
     weight=50
     maxRetry=2
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_7"
     active = 1
@@ -91,7 +91,7 @@ centerId = "127.0.0.1:8500"
     weight=50
     maxRetry=2
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_8"
     active = 1
@@ -101,7 +101,7 @@ centerId = "127.0.0.1:8500"
     weight=50
     maxRetry=2
     [[autoid.slave]]
-    dsn = "root:root@tcp(127.0.0.1:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
+    dsn = "root:root@tcp(localhost:3306)/db_auto_id_slave?charset=latin1&interpolateParams=true"
     autoIdType="slave"
     autoIdTable="res_slave_current_9"
     active = 1
