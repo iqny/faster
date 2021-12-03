@@ -16,12 +16,15 @@ func TestNewAutoID(t *testing.T) {
 	//id,err:=auto.GetAutoId(1005)
 	//fmt.Println("id:",id,"err:",err)
 	var wg sync.WaitGroup
-	for i := 0; i < 1; i++ {
+	for i := 0; i < 50; i++ {
 		wg.Add(1)
 		go func() {
-			for j := 0; j < 1; j++ {
-				id, err := auto.GetAutoId(1005)
-				fmt.Println(id,"===",err)
+			for j := 0; j < 100000; j++ {
+				auto.GetAutoId(1005)
+				auto.GetAutoId(1006)
+				auto.GetAutoId(1007)
+				auto.GetAutoId(1008)
+				//fmt.Println(id,"===",err)
 			}
 			wg.Done()
 		}()

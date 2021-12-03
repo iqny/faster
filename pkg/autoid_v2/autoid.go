@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"orp/pkg/db"
 	xtime "orp/pkg/time"
+	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -51,29 +52,50 @@ var mu sync.Mutex
 
 func (a AutoId) GetAutoId(code int) (int64, error) {
 	var id int64
-	mu.Lock()
-	defer mu.Unlock()
-	//计算权重
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	randWeight := r.Intn(int(conf.Slave.Len))
 	if dat, ok := a[code]; ok {
-		fmt.Println(dat)
 		for i := 0; i < 2; i++ {
 			obj:=dat[randWeight]
+			mu.Lock()
 			id = obj.getId()
-			fmt.Println("id",id)
 			if id <= 0 {
 				masterId, err := a.getMasterId(code, obj.capacity)
-				fmt.Println(masterId)
 				if err != nil {
+					mu.Unlock()
 					continue
 				}
 				obj.setId(masterId)
+				mu.Unlock()
 				continue
 			} else {
+				mu.Unlock()
 				break
 			}
 		}
+	}else{
+		//请求不存在的code,自动生成并设置
+		mu.Lock()
+		defer mu.Unlock()
+		if _, ok := a[code]; !ok {
+			datas :=make([]*data,0)
+			for i := conf.Slave.Len; i > 0; i-- {
+				datas= append(datas, &data{
+					id:       0,
+					capacity: conf.Slave.Capacity,
+					num:      0,
+				})
+			}
+			a[code] = datas
+		}
+		dat = a[code]
+		obj:=dat[randWeight]
+		masterId, err := a.getMasterId(code, obj.capacity)
+		if err != nil {
+			return 0, err
+		}
+		obj.setId(masterId)
+		id = obj.getId()
 	}
 	return id, nil
 }
@@ -113,7 +135,6 @@ var engine *xorm.Engine
 var conf *Config
 
 func New(c *Config) *AutoId {
-
 	dbConfig := &db.Config{
 		DSN:         c.Db.Dsn,
 		Drive:       "mysql",
@@ -130,18 +151,17 @@ func New(c *Config) *AutoId {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	autoId := AutoId{}
-
+	var autoId = make(AutoId)
 	for i := c.Slave.Len; i > 0; i-- {
-		for kv := range ks {
-			autoId[kv] = append(autoId[kv], &data{
+		for _,code := range ks {
+			ck,_:=strconv.Atoi(string(code["k"]))
+			autoId[ck] = append(autoId[ck], &data{
 				id:       0,
 				capacity: c.Slave.Capacity,
 				num:      0,
 			})
 		}
 	}
-fmt.Println(autoId[1005])
 	return &autoId
 }
 func (a *AutoId) Close() {
