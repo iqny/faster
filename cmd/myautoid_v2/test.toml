@@ -1,0 +1,14 @@
+[app]
+serviceName = "AutoIdV2Service"
+port = 8195
+centerId = "localhost:8500"
+[autoid]
+    [autoid.db]
+        dsn = "root:root@tcp(localhost:3306)/db_auto_id_master?charset=latin1&interpolateParams=true"
+        autoIdTable="res"
+        active = 1
+        idle = 1
+        idleTimeout = "1m"
+    [autoid.slave]
+        capacity=1000
+        len=3

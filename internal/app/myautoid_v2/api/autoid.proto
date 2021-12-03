@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "./;api";
+package main;
+import public "github.com/gogo/protobuf/gogoproto/gogo.proto";
+message Response{
+  int64 Id = 1;
+  string Msg = 3;
+}
+message Request{
+  int64 Code = 1;
+}
+service AutoId{
+  rpc Get(Request) returns(Response);
+}
