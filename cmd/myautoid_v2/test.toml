@@ -1,6 +1,6 @@
 [app]
 serviceName = "AutoIdV2Service"
-port = 8195
+port = 8194
 centerId = "localhost:8500"
 [autoid]
     [autoid.db]

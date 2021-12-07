@@ -21,9 +21,9 @@ func TestNewAutoID(t *testing.T) {
 		go func() {
 			for j := 0; j < 100000; j++ {
 				auto.GetAutoId(1005)
-				auto.GetAutoId(1006)
-				auto.GetAutoId(1007)
-				auto.GetAutoId(1008)
+				//auto.GetAutoId(1006)
+				//auto.GetAutoId(1007)
+				//auto.GetAutoId(1008)
 				//fmt.Println(id,"===",err)
 			}
 			wg.Done()

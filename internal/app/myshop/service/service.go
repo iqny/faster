@@ -4,7 +4,7 @@ import (
 	"context"
 	"google.golang.org/grpc"
 	"log"
-	"orp/internal/app/myautoid/api"
+	"orp/internal/app/myautoid_v2/api"
 	"orp/internal/app/myshop/conf"
 	"orp/internal/app/myshop/dao"
 	"orp/pkg/consul"

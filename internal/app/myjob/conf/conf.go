@@ -3,6 +3,7 @@ package conf
 import (
 	"flag"
 	"github.com/BurntSushi/toml"
+	"orp/pkg/db"
 	"orp/pkg/rabbitmq"
 	"orp/pkg/rabbitmq/logger"
 	"path/filepath"
@@ -12,6 +13,7 @@ import (
 type TomlConfig struct {
 	Queue  *rabbitmq.Config
 	Logger *logger.Config //队列业务日志
+	Db     *db.Config
 }
 
 //conf

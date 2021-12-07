@@ -1,17 +1,31 @@
+[db]
+drive = "mysql"
+dsn = "root:root@tcp(127.0.0.1:3310)/sharding_db?charset=utf8mb4&interpolateParams=true"
+logLevel = "debug"
+showSql = true
+logFile = 'D:/juest/src/orp/logs/sql_job.log'
+active = 100
+idle = 10
+timezone = "Asia/Shanghai"
+idleTimeout = "1m"
 [queue]
 addr="amqp://guest:guest@localhost:5672/"
 logFilePath="D:/juest/src/orp/logs/queue/monitor.log"
 exchange="test.direct"
 [[queue.work]]
 name="orderQueue"#队列名称
-enable=true
+enable=false
 maxIdle=1
 [[queue.work]]
 name="testQueue"#队列名称
-enable=true
+enable=false
 maxIdle=2
 [[queue.work]]
 name="orderTransformQueue"#队列名称
+enable=false
+maxIdle=1
+[[queue.work]]
+name="pushWmsQueue"#队列名称
 enable=true
 maxIdle=1
 [logger]

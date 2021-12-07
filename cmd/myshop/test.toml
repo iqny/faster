@@ -2,7 +2,7 @@
 timezone = "Asia/Shanghai"
 host = ":8192" #
 gzip = true
-autoIdService = "autoIdService"
+autoIdService = "autoIdV2Service"
 centerId = "127.0.0.1:8500"
 shopCode = 1010
 serviceName = "ShopService"

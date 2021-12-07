@@ -30,6 +30,7 @@ func main() {
 	q.Register("testJob",j.TestJob)
 	q.Register("orderJob",j.OrderJob)
 	q.Register("orderTransformJob",j.OrderTransformJob)
+	q.Register("pushWmsObj",j.PushWmsObj)
 	q.Run()
 	signalHandler(cancelFunc)
 }

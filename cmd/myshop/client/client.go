@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	api2 "orp/internal/app/myautoid/api"
+	api2 "orp/internal/app/myautoid_v2/api"
 	"orp/internal/app/myshop/api"
 	"orp/pkg/consul"
 	"strconv"
@@ -26,7 +26,7 @@ func add() {
 	}
 	defer conn.Close()
 	c := api.NewShopClient(conn)
-	connAuto, err := consul.NewClientConn("172.16.51.95:8500", "AutoIdService")
+	connAuto, err := consul.NewClientConn("172.16.51.95:8500", "AutoIdV2Service")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,7 +39,7 @@ s:=time.Now()
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			for i := 0; i < 10000; i++ {
+			for i := 0; i < 100000; i++ {
 				ctx, cancel := context.WithTimeout(context.Background(), time.Duration(200)*time.Second)
 				ctx1, cancel1 := context.WithTimeout(context.Background(), time.Duration(200)*time.Second)
 				defer cancel()
@@ -47,7 +47,6 @@ s:=time.Now()
 				res,_:=c1.Get(ctx1,&api2.Request{
 					Code:                 1010,
 				})
-				res.GetId()
 				_, err = c.AddShopOrderLog(ctx, &api.Order{
 					ShopId:               1,
 					Tid:                  strconv.FormatInt(res.GetId(),10),
