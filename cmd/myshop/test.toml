@@ -6,7 +6,7 @@ autoIdService = "autoIdV2Service"
 centerId = "127.0.0.1:8500"
 shopCode = 1010
 serviceName = "ShopService"
-port = 8193
+port = 8192
 [db]
 drive = "mysql"
 dsn = "root:root@tcp(127.0.0.1:3310)/sharding_db?charset=utf8mb4&interpolateParams=true"

@@ -13,7 +13,7 @@ import (
 	"xorm.io/xorm"
 )
 
-type Master struct {
+type Db struct {
 	Dsn         string
 	Active      int
 	Idle        int
@@ -21,39 +21,33 @@ type Master struct {
 	AutoIdTable string
 	IdleTimeout xtime.Duration
 }
-type Slave struct {
-	Capacity int64
-	Len      int64
-}
-type data struct {
+type node struct {
 	id       int64
 	capacity int64
 	num      int64
 }
 
-func (d *data) getId() int64 {
-	//d.id++
+func (d *node) getId() int64 {
 	atomic.AddInt64(&d.id, +1)
-	//d.num--
 	atomic.AddInt64(&d.num, -1)
 	if atomic.LoadInt64(&d.num) < 0 {
 		return 0
 	}
 	return d.id
 }
-func (d *data) setId(id int64) {
+func (d *node) setId(id int64) {
 	atomic.StoreInt64(&d.id, id)
 	atomic.StoreInt64(&d.num, d.capacity)
 }
 
-type AutoId map[int][]*data
+type AutoId map[int][]*node
 
 var mu sync.Mutex
 
 func (a AutoId) GetAutoId(code int) (int64, error) {
 	var id int64
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	randWeight := r.Intn(int(conf.Slave.Len))
+	randWeight := r.Intn(int(conf.Len))
 	if dat, ok := a[code]; ok {
 		for i := 0; i < 2; i++ {
 			obj:=dat[randWeight]
@@ -78,11 +72,11 @@ func (a AutoId) GetAutoId(code int) (int64, error) {
 		mu.Lock()
 		defer mu.Unlock()
 		if _, ok := a[code]; !ok {
-			datas :=make([]*data,0)
-			for i := conf.Slave.Len; i > 0; i-- {
-				datas= append(datas, &data{
+			datas :=make([]*node,0)
+			for i := conf.Len; i > 0; i-- {
+				datas= append(datas, &node{
 					id:       0,
-					capacity: conf.Slave.Capacity,
+					capacity: conf.Capacity,
 					num:      0,
 				})
 			}
@@ -127,8 +121,9 @@ func (a AutoId) getMasterId(key int, count int64) (id int64, err error) {
 }
 
 type Config struct {
-	Db    *Master
-	Slave *Slave
+	Db    *Db
+	Capacity int64
+	Len      int64
 }
 
 var engine *xorm.Engine
@@ -152,12 +147,12 @@ func New(c *Config) *AutoId {
 		log.Fatalln(err)
 	}
 	var autoId = make(AutoId)
-	for i := c.Slave.Len; i > 0; i-- {
+	for i := c.Len; i > 0; i-- {
 		for _,code := range ks {
 			ck,_:=strconv.Atoi(string(code["k"]))
-			autoId[ck] = append(autoId[ck], &data{
+			autoId[ck] = append(autoId[ck], &node{
 				id:       0,
-				capacity: c.Slave.Capacity,
+				capacity: c.Capacity,
 				num:      0,
 			})
 		}
