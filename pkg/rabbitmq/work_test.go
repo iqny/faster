@@ -5,8 +5,10 @@ import (
 	"context"
 	"encoding/gob"
 	"fmt"
+	uuid "github.com/satori/go.uuid"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"testing"
 )
@@ -35,21 +37,21 @@ func TestNew(t *testing.T) {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	w = New(ctx,cfg)
-	w.Register("testJob", func(args interface{}, taskId string) error {
+	w.Register("testJob", func(args interface{})  (err error,taskId string) {
 		var scb string
 		b := args.([]byte)
 		decoder := gob.NewDecoder(bytes.NewReader(b))
 		decoder.Decode(&scb)
 		fmt.Println(scb, taskId)
-		return nil
+		return nil,""
 	})
-	w.Register("orderJob", func(args interface{}, taskId string) error {
+	w.Register("orderJob", func(args interface{})  (err error,taskId string) {
 		var scb string
 		b := args.([]byte)
 		decoder := gob.NewDecoder(bytes.NewReader(b))
 		decoder.Decode(&scb)
 		fmt.Println(scb, taskId)
-		return nil
+		return nil,""
 	})
 	w.Run()
 	signalHandler(cancel)
@@ -78,11 +80,16 @@ func TestPush(t *testing.T) {
 	client := NweSender("amqp://guest:guest@127.0.0.1:5672/", "test.direct")
 	var data = make(map[string]interface{})
 	data["no"] = 123
-	for i := 0; i < 2; i++ {
+	for i := 0; i < 1; i++ {
+		data["traceId"] = UUid()
 		/*client.Send("testQueue", "testJob", "testJob...")
 		client.Send("orderQueue", "orderJob", "orderJob...")
 		client.Send("orderTransformQueue", "orderTransformJob", "orderTransformJob...")*/
 		client.Send("pushWmsQueue", "pushWmsObj", data)
 	}
 
+}
+func UUid() string{
+	v4 := strings.Split(uuid.NewV4().String(), "-")
+	return fmt.Sprintf("%s%s", v4[3], v4[4])
 }

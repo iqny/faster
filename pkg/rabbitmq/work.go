@@ -5,19 +5,17 @@ import (
 	"context"
 	"encoding/gob"
 	"fmt"
-	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"github.com/streadway/amqp"
 	"log"
-	"strings"
 	"sync"
 	"time"
 )
 
-type HandlerFunc func(args interface{}, taskId string) error
+type HandlerFunc func(args interface{}) (err error,taskId string)
 
-func (h HandlerFunc) Call(args interface{}, taskId string) error {
-	return h(args, taskId)
+func (h HandlerFunc) Call(args interface{}) (err error,taskId string) {
+	return h(args)
 }
 
 type Queue struct {
@@ -217,11 +215,11 @@ func (q *Queue) work(queueName string) {
 			decoder.Decode(&sender)
 			//查job处理方法
 			if f, ok = q.jobs[sender.Job]; ok {
-				v4 := strings.Split(uuid.NewV4().String(), "-")
-				traceId := fmt.Sprintf("%s%s", v4[3], v4[4])
-				q.logger.Infoln(fmt.Sprintf("%s Starting...", traceId))
-				err := f(sender.Msg, traceId)
-				q.logger.Infoln(fmt.Sprintf("%s Finished", traceId))
+				//v4 := strings.Split(uuid.NewV4().String(), "-")
+				//traceId := fmt.Sprintf("%s%s", v4[3], v4[4])
+				//q.logger.Infoln(fmt.Sprintf("%s Starting...", traceId))
+				err,traceId := f(sender.Msg)
+				//q.logger.Infoln(fmt.Sprintf("%s Finished", traceId))
 				if err == nil {
 					err := msg.Ack(false)
 					if err != nil {

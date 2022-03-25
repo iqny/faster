@@ -2,7 +2,9 @@ package job
 
 import (
 	"fmt"
+	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
+	"orp/internal/app/myjob/service"
 	"runtime"
 	"strings"
 )
@@ -10,10 +12,19 @@ import (
 type Job struct {
 	uuid    string
 	appName string
+	svr *service.Service
 }
 
-func (j *Job) setInfo(taskId string, name string) {
-	j.uuid = taskId
+func New(svr *service.Service) *Job  {
+	return &Job{
+		svr: svr,
+	}
+}
+func (j *Job) setInfo(traceId string, name string) {
+	if traceId == "" {
+		traceId = UUid()
+	}
+	j.uuid = traceId
 	j.appName = name
 }
 func (j *Job) debug(args ...interface{}) {
@@ -56,4 +67,8 @@ func fileInfo(skip int) string {
 		}
 	}
 	return fmt.Sprintf("%s:%d", file, line)
+}
+func UUid() string{
+	v4 := strings.Split(uuid.NewV4().String(), "-")
+	return fmt.Sprintf("%s%s", v4[3], v4[4])
 }

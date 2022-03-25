@@ -29,7 +29,7 @@ func TestRun(t *testing.T) {
 		return logger.NewLfsHook()
 	})
 	//j:=job.Job{}
-	for i := 0; i < 10000000; i++ {
+	for i := 0; i < 10; i++ {
 		var scb string
 		b,_:=byteEncoder("abc")
 		bytes.NewReader(b)

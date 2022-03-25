@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"orp/internal/app/myjob/conf"
 	"orp/internal/app/myjob/job"
+	"orp/internal/app/myjob/service"
 	"orp/pkg/rabbitmq"
 	"orp/pkg/rabbitmq/logger"
 	"os"
@@ -25,8 +26,8 @@ func main() {
 		return logger.NewLfsHook()
 	})
 	q = rabbitmq.New(ctx, conf.Cfg.Queue)
-
-	j:=job.Job{}
+	svr:=service.New(conf.Cfg)
+	j:=job.New(svr)
 	q.Register("testJob",j.TestJob)
 	q.Register("orderJob",j.OrderJob)
 	q.Register("orderTransformJob",j.OrderTransformJob)
